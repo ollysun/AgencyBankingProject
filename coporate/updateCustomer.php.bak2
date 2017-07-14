@@ -1,0 +1,25 @@
+<?php
+include '../Controller.php';
+//Model::checkvalidation();
+$requestid = 0;
+if (isset($_GET['customerID']))
+{
+    $requestid = $_REQUEST['customerID'];
+}
+$resultval = populateCustomerDetail($requestid);
+//unset($_REQUEST['requestId']);
+$result = json_decode(json_encode($resultval), 1);
+//var_dump($result); die();
+foreach($result as $val)
+{
+	echo $val['firstName'];
+}
+if (isset($_SESSION['username']))
+{
+    $sessionuser = $_SESSION['username'];
+     //unset($_SESSION['username']);
+}
+//sessiontimeout();
+//logmeout();
+?>
+

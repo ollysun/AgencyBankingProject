@@ -1,0 +1,21 @@
+<?php include '../Controller.php';
+Model::checkvalidation();
+if (isset($_GET['agentid']))
+{
+    $idval = $_GET['agentid'];
+}
+
+$_SESSION['id'] = $idval;
+
+$agentList = populateAgentdetail($idval);//please remember to turn ME TO array(json_decode(json_encode($agentList), 1));
+$agval = json_decode(json_encode($agentList), 1);
+// $agval;die();
+//var_dump($agval);die();
+foreach($agval as $val)
+{
+	//var_dump($val); die();
+	echo $val["agentfullname"]; die();
+}
+sessiontimeout();
+logmeout();
+?>

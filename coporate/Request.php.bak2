@@ -1,0 +1,15 @@
+<?php
+	include '../Controller.php';
+Model::checkvalidation();
+
+$page = (int) (!isset($_GET["page"]) ? 1 : $_GET["page"]);
+$limit = 20;
+$startpoint = ($page * $limit) - $limit;
+$query = "select * from systemuserrequest";
+$agentList = populateManageRequest($startpoint,$limit);
+//var_dump($agentList); die();
+$objectdetail = json_decode(json_encode($agentList), 1);
+//var_dump($objectdetail);die();
+sessiontimeout();
+logmeout();
+?>

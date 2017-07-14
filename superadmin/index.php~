@@ -1,0 +1,77 @@
+<?php
+include '../Controller.php';
+/* if ($_GET['id']) {
+  $username=$_GET['id'];
+  $url = "http://192.168.1.125:8080/AgencyBankingMWare/CorporateView?corporatedata="
+  . stripslashes(strtolower(trim($username))) ;
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, $url);
+  curl_setopt($ch, CURLOPT_HEADER, 0);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  $result = curl_exec($ch);
+  curl_close($ch);
+  echo $result; die();
+  $data= loadCorpData($username);
+
+  if (count($data)>0) {
+  $obj=$data[0];
+  $compName=$obj->compName;
+  $balance=$obj->balance;
+  $_SESSION['id']=$username;
+  }
+  }
+  else {
+  }
+ * * 
+ */
+if (isset($_SESSION['username'])) {
+    $sessionuser = $_SESSION['username'];
+    //unset($_SESSION['username']);
+}
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Banking Agency</title>
+        <link type="text/css" rel="stylesheet" href="../style.css"/>
+        <!--<link type="text/css" rel="stylesheet" href="../mystyles/stickyfooter.css"/>--> 
+
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="banner">
+                <div id="bannertxt">
+                    <ul>
+                        <li>username: <? echo "<b>" .  session_id() . "</b>"; echo $_SESSION['status'];?> </li> |
+                        <li> <? echo $_SESSION['roles'];?></li> |
+                        <li class="logout"><a href="../index.php"> Log out</a></li>
+                    </ul>
+                    <div id="changepassword">
+                        <a href="./changepassword.php"> Change Password</a>
+                    </div>
+                </div>
+            </div>
+            <div id="content">
+                <div id="userDetail">
+                    <div id="topmenu">
+                        <ul>
+                            <li> <a href="../superadmin/index.php"> Home</a></li>
+                            <li> <a href="../coporate/index.php"> Quick Menu</a></li>
+                            <li> <a href="../SystemUser/index.php"> User Management</a></li>
+                            <li> <a href="../Systemactivity/activitylog.php"> System Activities</a></li>
+                            <li> <a href="../sessionreport/activesession.php"> Session Reports</a></li>
+                            <li> <a href="../customreport/"> Custom Reports</a></li>
+                            <li><a href="../configurationservice/configuration.php">Service Configuration</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div id="mainmsg">
+                    Welcome  
+                </div>
+            </div>
+            
+        </div>
+        <div id="footer"></div>
+    </body>
+</html>

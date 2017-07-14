@@ -1,0 +1,189 @@
+<?php
+include '../Controller.php';
+Model::checkvalidation();
+
+$param = ''; $splitparamvalue = array();
+
+$servicedetail = populateServiceName();
+//var_dump($roledetail); die();
+$splitmethod = splitKeyword($servicedetail);
+//var_dump($splitmethod);die();
+include '../pathcheck.php';
+//$base = basename(pathcheck());
+sessiontimeout();
+ logmeout();                  
+?>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Banking Agency</title>
+        <link type="text/css" rel="stylesheet" href="../style.css"/> 
+        <link href="../jquery/css/bvalidator/bvalidator.css" rel="stylesheet" type="text/css" />
+        <script src="../jquery/development/jquery-1.8.2.js"></script>
+        <script type="text/javascript" src="../jquery/js/jquery.bvalidator.js"></script>
+        <script src="../jquery/customjs.js"></script>
+        <script type="text/javascript">
+                $(document).ready(function() {
+                    
+                     $('#form1').bValidator();
+                     
+                     $("#dob").datepicker({
+                        defaultDate: "+1w",
+                        dateFormat: "yy-mm-dd"
+                    });
+//                                $('#servicename').change(function(){
+//                                    
+//                                        if ($(this).val() != '')   
+//                                        {
+////                                                var dataval = $('this').val();
+//                                               $.get(
+//                                                    'configuration.php',
+//                                                    { serviceid: $(this).val() },
+//                                                    function(data)
+//                                                    {
+////                                                        $('#result').html(data);
+//                                                    });
+//
+//                                         }
+//                                    })
+                     
+                    
+                });
+    </script>
+    </head>
+    <body>
+        <div id="wrapper">
+          <div id="banner">
+              <div id="bannertxt">
+                    <ul>
+                        <li>username: <?  if (isset($_SESSION['adminusername'])){
+                            echo 'Admin';
+                        }else{
+                            echo $_SESSION['status'];
+                        }
+                            ?> </li> |
+                        <li> <? 
+                        if (isset($_SESSION['adminpassword'])){
+                            echo "Admin";
+                        }else{
+                            echo $_SESSION['roles'];
+                        }?></li> |
+                        <li class="logout"><a href="../index.php"> Log out</a></li>
+                    </ul>
+                    <div id="changepassword">
+                        <a href="../changepassword.php"> Change Password</a>
+                    </div>
+                </div>
+          </div>
+          <div id="content">
+             <div id="userDetail"> 
+              <div id="topmenu">
+                  <ul>
+                       <li><a href='../superadmin/index.php'>Home</a></li>
+                           <?php topmenumodule(); ?>
+                  </ul>
+              </div>
+            </div>
+           <div id="contentWrapper">
+            <div id="menu">
+                <h1>Service Configuration</h1>
+                  <ul>
+                    <?php echo ServiceConfiguration();?>
+                  </ul>
+                <div id="slidingjpg">
+                    <img src="../images/system.jpg"  alt="" title="branchless banking"/>
+                </div>
+            </div>
+         <div id="mainContent">
+             <div id="fundform">
+           <?php
+                  if (isset($_GET['wmRespond'])) {
+          echo '<div id="response"><span class="statusSuccess"></span><span class="successtext">System Configuration Successfully Created. </span></div>';  
+                     unset($_GET['wmRespond']);
+                    }else if(isset($_GET['wmRespondExists'])){
+           echo '<div id="error"><span class="statuserror"></span><span class="statustext">This Service has already been done</span></div>';
+                    unset($_GET['wmRespondExists']);
+                    }
+                    elseif (isset($_SESSION['errorlist'])) {  
+            ?>
+           <div id="errorDetail"> Please fix the following input errors:
+             <ul>
+               <?php
+                    $errorlist=$_SESSION['errorlist'];
+                    unset($_SESSION['errorlist']);
+                    foreach ($errorlist as $value) {
+                     $control=$value;
+                     echo '<li> ' . $control . '</li>';
+                    }
+                    ?>
+             </ul>
+           </div>
+           <?php   
+                    }  elseif (isset($_GET['wmresponderror'])) {
+                        echo '<div id="error"><span class="statuserror"></span><span class="statustext">Sorry No response from the connection </span></div>';
+                            unset($_SESSION['connecterror']);
+                    }elseif (isset($_SESSION['connecterror'])) {
+           echo '<div id="error"><span class="statuserror"></span><span class="statustext">Sorry Connection Error. </span></div>';
+                            unset($_SESSION['connecterror']);
+               }
+                    ?>
+           <div id="formcontainer">
+           <form id="form1" name="form1" method="post" action="../Controller.php">
+               <div class="caption" style="width: 530px">Create Configuration</div>
+               <div id="agentdiv">
+                <table class="agentform" width="100%">
+               <tr>
+               <td id="key">ThirdParty Name</td>
+               <td id="value"><input type="text" placeholder="please enter the thirdparty name" name="thirdpartyname" size="30px" value ="" data-bvalidator="alpha,required" data-bvalidator-msg="Please enter the thirdpartyname" /></td>
+               </tr>
+               <tr>
+               <td id="key">URL</td>
+               <td id="value"><input type="text" placeholder="please enter the thirdparty url" name="url" size="30px" value ="" data-bvalidator="required" data-bvalidator-msg="Please enter the url" /></td>
+               </tr>
+               <tr>
+               <td id="key">Service Name</td>
+               <td id="value">
+                   <select id="servicename" name="servicename" data-bvalidator="required" data-bvalidator-msg="Select servicename from drop-down menu." onChange="composeEntities('servicename')">
+                   <option value="">--select the Service--</option>
+                <?php 
+                for($i = 0 ;  $i < sizeof($splitmethod['service']); $i++)
+                {
+                ?>
+                   <option value="<?php echo $splitmethod['service'][$i];?>"><?php echo $splitmethod['service'][$i];?></option>
+                <?php
+                }
+                ?>
+               </select>
+               </td>
+               </tr>
+               <tr>
+               <td id="key">Parameter Value</td>
+               <td id="value">
+               <select id="paramval"  name="parameterval"
+                      data-bvalidator="required" data-bvalidator-msg="Select parametervalue from drop-down menu." >
+                   <option value="">--select the ParameterValue--</option>
+               </select>
+               </td>
+               </tr>
+               <tr>
+               <td id="key">Parameter Name</td>
+               <td id="value"><input type="text" placeholder="please enter the parameter name" name="parametername" size="30px" value ="" data-bvalidator="required" data-bvalidator-msg="enter valid parameter name"/></td>
+               </tr>
+               <tr>
+               <tr>
+                   <td id="key"></td>
+                   <td id="value"><input type="submit" value="Configure" name="createconfiguration"/></td>
+               </tr>
+                </table>
+               </div>
+           </form>
+           </div>
+           </div>
+         </div>
+           </div>
+          </div>
+        </div>
+        <div id="footer"></div>
+    </body>
+</html>

@@ -1,0 +1,7 @@
+<?php
+	echo $_GET['agentid'];
+	echo "<br>";
+	echo $_GET['agentphone'];
+	echo "<br>";
+	echo "reconcileme";
+?>
